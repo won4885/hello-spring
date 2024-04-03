@@ -4,34 +4,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import hello.spring.domain.Member;
+import hello.spring.repository.JdbcMemberRepository;
+import hello.spring.repository.MemberRepository;
 import hello.spring.repository.MemoryMemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-class MemberServiceTest {
+@SpringBootTest
+@Transactional
+class MemberServiceIntegrationTest {
 
+    @Autowired
     private MemberService memberService;
-    private MemoryMemberRepository memberRepository;
 
-    @BeforeEach
-    public void beforeEach() {
-        memberRepository = new MemoryMemberRepository();
-        memberService = new MemberService(memberRepository);
-    }
-
-    @AfterEach
-    public void afterEach() {
-        memberRepository.clearStore();
-    }
+    @Autowired
+    private MemberRepository memberRepository;
 
     @DisplayName("회원 가입을 한 이름을 성공적으로 가져올 수 있다.")
     @Test
     void 회원_가입() {
         // given
         Member member = new Member();
-        member.setName("spring100");
+        member.setName("spring");
 
         // when
         Long savedId = memberService.join(member);
